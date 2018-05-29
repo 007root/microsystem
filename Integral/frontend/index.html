@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="/src/js/vue.js"></script>
+    <script src="/src/js/axios.min.js"></script>
+    <link href="/src/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<body>
+<style>
+    .div1{
+        position:absolute;
+        right:0.5%;
+        top:0.5%;
+    }
+</style>
+<div>
+
+    <!-- Nav tabs -->
+    <ul id="myTabs" class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#addTab" aria-controls="addTab" role="tab" data-toggle="tab">积分录入</a></li>
+      <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">积分查询</a></li>
+      <li role="presentation"><a href="#costTab" aria-controls="messages" role="tab" data-toggle="tab">积分消费</a></li>
+      <li role="presentation"><a href="#exchangeTab" aria-controls="settings" role="tab" data-toggle="tab">换货</a></li>
+      <li role="presentation"><a href="#backTab" aria-controls="settings" role="tab" data-toggle="tab">退货</a></li>
+      <button onclick="logout()" type="button" class="btn btn-info div1">退出登录</button>
+    </ul>
+
+    <!-- Tab panes -->
+    <div id="myTabContent" class="tab-content">
+        <!-- Add Integral --!>
+        <div role="tabpanel" class="tab-pane active" id="addTab">
+            <div id="addError" class="form-inline">
+                <div class="form-group">
+                    <label for="exampleInputName2">手机号 *</label>
+                    <input type="text" class="form-control" id="addPhone" placeholder="188888888888">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">消费金额 *</label>
+                    <input type="text" class="form-control" id="addPrice" placeholder="1000">
+                </div>
+                <div v-bind:style="{ display: hideName }" class="form-group">
+                    <label for="exampleInputEmail2">客户姓名</label>
+                    <input type="text" class="form-control" id="addName" placeholder="小明">
+                </div>
+                <button v-on:click="addjifen" class="btn btn-default">确定</button>
+                <div  v-bind:style="{ display: hideError }" class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>错误!!! </strong>  {{ errorInfo }}
+                </div>
+            </div>
+        </div>
+
+        <!-- select --!>
+        <div role="tabpanel" class="tab-pane" id="profile">
+            <div id="selectError" class="form-inline">
+                <div class="form-group">
+                    <label for="exampleInputName2">手机号 *</label>
+                    <input type="text" class="form-control" id="selectPhone" placeholder="188888888888">
+                </div>
+                <button v-on:click="selectinfo" class="btn btn-default">确定</button>
+                <div>
+                    <table class="table table-hover table-bordered">
+                        <tbody>
+                            <slot name="ths">
+                            <tr slot="ths">
+                                <th>姓名</th>
+                                <th>手机号</th>
+                                <th>积分</th>
+                                <th>时间</th>
+                            </tr>
+                            <tr id="v-for-object">
+                                <tr v-for="value in object">
+                                    <td> {{ value.name }}</td>
+                                    <td> {{ value.phone }}</td>
+                                    <td> {{ value.integral }}</td>
+                                    <td> {{ value.lut }}</td>
+                                </tr>
+                             </tr>
+                            </slot>
+                        </tbody>
+                    </table>
+                </div>
+                <div  v-bind:style="{ display: hideError }" class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>错误!!! </strong>  {{ errorInfo }}
+                </div>
+            </div>
+        </div>
+
+        <!-- cost --!>
+        <div role="tabpanel" class="tab-pane" id="costTab">
+            <div id="costError" class="form-inline">
+                <div class="form-group">
+                    <label for="exampleInputName2">手机号 *</label>
+                    <input type="text" class="form-control" id="costPhone" placeholder="188888888888">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">兑换积分 *</label>
+                    <input type="text" class="form-control" id="cost" placeholder="100">
+                </div>
+                <button v-on:click="convertintegral" class="btn btn-default">确定</button>
+                <div  v-bind:style="{ display: hideError }" class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>错误!!! </strong>  {{ errorInfo }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- exchange --!>
+        <div role="tabpanel" class="tab-pane" id="exchangeTab">
+            <div id="exchangeError" class="form-inline">
+                <div class="form-group">
+                    <label for="exampleInputName2">手机号 *</label>
+                    <input type="text" class="form-control" id="exchangePhone" placeholder="188888888888">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">原商品价格 *</label>
+                    <input type="text" class="form-control" id="oriPrice" placeholder="100">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">现商品价格 *</label>
+                    <input type="text" class="form-control" id="curPrice" placeholder="100">
+                </div>
+                <button v-on:click="saleexchange" class="btn btn-default">确定</button>
+                <div  v-bind:style="{ display: hideError }" class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>错误!!! </strong>  {{ errorInfo }}
+                </div>
+            </div>
+        </div>
+
+        <!-- back --!>
+        <div role="tabpanel" class="tab-pane" id="backTab">
+            <div id="backError" class="form-inline">
+                <div class="form-group">
+                    <label for="exampleInputName2">手机号 *</label>
+                    <input type="text" class="form-control" id="backPhone" placeholder="188888888888">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">商品价格 *</label>
+                    <input type="text" class="form-control" id="backPrice" placeholder="100">
+                </div>
+                <button v-on:click="saleback" class="btn btn-default">确定</button>
+                <div  v-bind:style="{ display: hideError }" class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>错误!!! </strong>  {{ errorInfo }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+<script src="/src/js/main.js"></script>
+<script src="/src/js/jquery.min.js"></script>
+<script src="/src/js/bootstrap.min.js"></script>
+</html>
