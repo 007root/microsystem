@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, session
 from account.models import User
 from common.util import required_login, send_result
+import json
 
 
 account = Blueprint('account', __name__)
@@ -25,13 +26,13 @@ def login():
         ret = {'code': 1, 'msg': 'Invalid username or password'}
         result = None
         data = request.get_json(force=True)
-        name = data.get('name')
+        name = data.get('username')
         password = data.get('password')
         if name and password:
             result = User.objects(name=name,password=password)
         if result:
             session['is_login']= {'name':name}
-            return redirect('/index')
+            ret = {'code': 0}
         return json.dumps(ret)
     else:
         return redirect('/index/login.html')
